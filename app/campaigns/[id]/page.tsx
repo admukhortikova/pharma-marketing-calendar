@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
+import RegionSelector from '@/components/RegionSelector';
 
 interface Campaign {
   id: string; name: string; season: string; start_date: string; end_date: string;
@@ -217,20 +218,19 @@ export default function CampaignDetail() {
               {/* Регионы */}
               <div className="card" style={{ padding: 24 }}>
                 <h3 style={{ margin: '0 0 12px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Регионы</h3>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  {REGIONS.map(r => {
-                    const active = camp.regions?.includes(r);
-                    return (
-                      <button key={r} disabled={!canEdit} onClick={async () => {
-                        if (!canEdit) return;
-                        const updated = active ? camp.regions.filter(x => x !== r) : [...(camp.regions || []), r];
-                        await save({ regions: updated });
-                      }} style={{ padding: '6px 14px', background: active ? `${color}15` : 'var(--bg-elevated)', color: active ? color : 'var(--text-muted)', border: `1px solid ${active ? `${color}40` : 'var(--border)'}`, borderRadius: 20, fontSize: 12, fontWeight: 600, cursor: canEdit ? 'pointer' : 'default', fontFamily: 'Manrope' }}>
-                        {r}
-                      </button>
-                    );
-                  })}
-                </div>
+                {canEdit ? (
+                  <RegionSelector
+                    selected={camp.regions || []}
+                    onChange={async (regions) => await save({ regions })}
+                    color={color}
+                  />
+                ) : (
+                  <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+                    {camp.regions?.map(r => (
+                      <span key={r} style={{ padding: '4px 12px', background: `${color}15`, color, border: `1px solid ${color}40`, borderRadius: 20, fontSize: 12, fontWeight: 600 }}>{r}</span>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 

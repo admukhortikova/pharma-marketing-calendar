@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Sidebar from '@/components/Sidebar';
+import RegionSelector from '@/components/RegionSelector';
 
 const REGIONS = ['Москва', 'СПб', 'Екатеринбург', 'Новосибирск', 'Казань', 'Краснодар', 'Ростов-на-Дону', 'Воронеж', 'Сочи'];
 const CHANNELS = ['Аптека', 'Диджитал', 'Мерч', 'Полевые визиты', 'Конференции'];
@@ -110,13 +111,10 @@ export default function NewCampaign() {
             {/* Регионы */}
             <div className="card" style={{ padding: 24 }}>
               <h3 style={{ margin: '0 0 16px', fontSize: 13, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5 }}>Регионы</h3>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
-                {REGIONS.map(r => (
-                  <button key={r} onClick={() => toggle('regions', r)} style={{ padding: '6px 14px', borderRadius: 20, border: `1px solid ${form.regions.includes(r) ? 'var(--accent)' : 'var(--border)'}`, background: form.regions.includes(r) ? 'var(--accent-light)' : 'transparent', color: form.regions.includes(r) ? 'var(--accent)' : 'var(--text-secondary)', fontSize: 13, cursor: 'pointer', fontFamily: 'Manrope', fontWeight: 500 }}>
-                    {r}
-                  </button>
-                ))}
-              </div>
+              <RegionSelector
+                selected={form.regions}
+                onChange={(regions) => setForm(f => ({ ...f, regions }))}
+              />
             </div>
 
             {/* Каналы */}
