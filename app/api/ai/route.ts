@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
 Верни JSON:
 {"risks": [{"title": "...", "severity": "High|Medium|Low", "description": "...", "mitigation": "..."}], "launch_window": "Оптимальное окно запуска в 1 предложении", "conflicts_warning": "Предупреждение о возможных конфликтах или пустая строка"}
 
-МАКСИМУМ 4 риска, каждое поле не длиннее 15 слов.`;
+МАКСИМУМ 4 риска, каждое поле не длиннее 15 слов. Все числа писать цифрами, не словами.`;
 
       const text = await callLLM(prompt);
       return NextResponse.json({ result: parseJSON(text) });
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
 Верни JSON:
 {"recommendations": [{"category": "Бюджет|Каналы|Сроки|Регионы", "title": "...", "description": "...", "impact": "High|Medium|Low"}], "brief_template": "Готовый текст внутреннего брифа для команды в 3-4 предложениях"}
 
-МАКСИМУМ 4 рекомендации.`;
+МАКСИМУМ 4 рекомендации. Все числа писать цифрами, не словами.`;
 
       const text = await callLLM(prompt);
       return NextResponse.json({ result: parseJSON(text) });
