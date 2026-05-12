@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Manrope:wght@300;400;500;600;700;800&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #070b12;
+  --bg-card: #0d1220;
+  --bg-card-hover: #111829;
+  --bg-elevated: #141c2e;
+  --border: #1a2440;
+  --border-subtle: #111829;
+  --text-primary: #e8eaf2;
+  --text-secondary: #7c85a8;
+  --text-muted: #4a5270;
+  --accent: #6366f1;
+  --accent-hover: #4f46e5;
+  --accent-light: rgba(99,102,241,0.12);
+  --success: #10b981;
+  --success-bg: rgba(16,185,129,0.08);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245,158,11,0.08);
+  --danger: #ef4444;
+  --danger-bg: rgba(239,68,68,0.08);
+  --orvi: #6366f1;
+  --allergy: #10b981;
+  --summer: #f59e0b;
+  --cardio: #ef4444;
+  --gastro: #8b5cf6;
+  --ai-gradient: linear-gradient(135deg, #6366f1, #8b5cf6, #06b6d4);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: var(--bg); color: var(--text-primary); font-family: 'Manrope', sans-serif; -webkit-font-smoothing: antialiased; min-height: 100vh; }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.card { background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; transition: all 0.2s; }
+.card:hover { border-color: rgba(99,102,241,0.25); }
+
+.btn-primary { background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Manrope'; display: inline-flex; align-items: center; gap: 8px; }
+.btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(99,102,241,0.3); }
+.btn-secondary { background: transparent; color: var(--text-secondary); border: 1px solid var(--border); padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.2s; font-family: 'Manrope'; display: inline-flex; align-items: center; gap: 8px; }
+.btn-secondary:hover { border-color: var(--accent); color: var(--text-primary); background: var(--accent-light); }
+.btn-ai { background: var(--ai-gradient); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: 'Manrope'; display: inline-flex; align-items: center; gap: 8px; }
+.btn-ai:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(99,102,241,0.4); }
+
+.input { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: 8px; color: var(--text-primary); padding: 10px 14px; font-size: 14px; font-family: 'Manrope'; width: 100%; transition: border-color 0.2s; outline: none; }
+.input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(99,102,241,0.1); }
+.input::placeholder { color: var(--text-muted); }
+.label { font-size: 12px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; display: block; }
+.mono { font-family: 'IBM Plex Mono', monospace; }
+
+.ai-panel { background: linear-gradient(135deg, rgba(99,102,241,0.05), rgba(139,92,246,0.05)); border: 1px solid rgba(99,102,241,0.2); border-radius: 12px; position: relative; overflow: hidden; }
+.ai-panel::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: var(--ai-gradient); }
+
+.nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 500; cursor: pointer; transition: all 0.15s; text-decoration: none; }
+.nav-item:hover { background: rgba(99,102,241,0.08); color: var(--text-primary); }
+.nav-item.active { background: rgba(99,102,241,0.12); color: #818cf8; font-weight: 600; }
+
+.progress-bar { background: var(--border); border-radius: 99px; height: 6px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+.fade-in { animation: fadeIn 0.3s ease forwards; }
+@keyframes spin { to { transform: rotate(360deg); } }
