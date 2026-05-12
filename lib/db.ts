@@ -84,8 +84,8 @@ const SEASON_PEAKS: SeasonPeak[] = [
   { id: 'sp-005', season: 'Гастро', name: 'Гастро активность', peak_months: [5, 6, 7, 8, 9], regions: ['Все регионы'], description: 'Летний период — рост ЖКТ-нарушений. Связан с изменением питания и путешествиями.', color: '#8b5cf6' },
 ];
 
-// Синтетические кампании
-let CAMPAIGNS: Campaign[] = [
+// Синтетические кампании — храним в globalThis для персистентности между запросами
+const DEMO_CAMPAIGNS: Campaign[] = [
   {
     id: 'camp-001',
     name: 'Осенний антигрипп 2025',
@@ -210,13 +210,20 @@ let CAMPAIGNS: Campaign[] = [
   },
 ];
 
+// globalThis хранилище — данные живут пока процесс Node.js не перезапустится
+declare global { var __campaigns: Campaign[] | undefined; }
+function getStore(): Campaign[] {
+  if (!global.__campaigns) global.__campaigns = [...DEMO_CAMPAIGNS];
+  return global.__campaigns;
+}
+
 // CRUD функции
 export function getAllCampaigns(): Campaign[] {
-  return CAMPAIGNS.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+  return getStore().sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 }
 
 export function getCampaignById(id: string): Campaign | undefined {
-  return CAMPAIGNS.find(c => c.id === id);
+  return getStore().find(c => c.id === id);
 }
 
 export function createCampaign(data: Partial<Campaign>): Campaign {
@@ -242,15 +249,15 @@ export function createCampaign(data: Partial<Campaign>): Campaign {
     created_at: now,
     updated_at: now,
   };
-  CAMPAIGNS.push(campaign);
+  getStore().push(campaign);
   return campaign;
 }
 
 export function updateCampaign(id: string, data: Partial<Campaign>): Campaign | null {
-  const index = CAMPAIGNS.findIndex(c => c.id === id);
+  const index = getStore().findIndex(c => c.id === id);
   if (index === -1) return null;
-  CAMPAIGNS[index] = { ...CAMPAIGNS[index], ...data, id, updated_at: new Date().toISOString() };
-  return CAMPAIGNS[index];
+  getStore()[index] = { ...getStore()[index], ...data, id, updated_at: new Date().toISOString() };
+  return getStore()[index];
 }
 
 export function getAllSKUs(): SKU[] { return SKUS; }
@@ -258,17 +265,18 @@ export function getSKUById(id: string): SKU | undefined { return SKUS.find(s => 
 export function getSeasonPeaks(): SeasonPeak[] { return SEASON_PEAKS; }
 
 export function getStats() {
-  const total = CAMPAIGNS.length;
+  const store = getStore();
+  const total = store.length;
   const byStatus = {
-    'Планирование': CAMPAIGNS.filter(c => c.status === 'Планирование').length,
-    'Активна': CAMPAIGNS.filter(c => c.status === 'Активна').length,
-    'Завершена': CAMPAIGNS.filter(c => c.status === 'Завершена').length,
-    'Приостановлена': CAMPAIGNS.filter(c => c.status === 'Приостановлена').length,
+    'Планирование': store.filter(c => c.status === 'Планирование').length,
+    'Активна': store.filter(c => c.status === 'Активна').length,
+    'Завершена': store.filter(c => c.status === 'Завершена').length,
+    'Приостановлена': store.filter(c => c.status === 'Приостановлена').length,
   };
-  const totalBudget = CAMPAIGNS.reduce((s, c) => s + c.budget, 0);
-  const totalSpent = CAMPAIGNS.reduce((s, c) => s + c.spent, 0);
+  const totalBudget = store.reduce((s, c) => s + c.budget, 0);
+  const totalSpent = store.reduce((s, c) => s + c.spent, 0);
   const bySeason: Record<string, number> = {};
-  CAMPAIGNS.forEach(c => { bySeason[c.season] = (bySeason[c.season] || 0) + 1; });
+  store.forEach(c => { bySeason[c.season] = (bySeason[c.season] || 0) + 1; });
 
   const conflicts = findConflicts();
 
@@ -277,10 +285,10 @@ export function getStats() {
 
 export function findConflicts(): Array<{camp1: string; camp2: string; overlap: string; type: string}> {
   const conflicts: Array<{camp1: string; camp2: string; overlap: string; type: string}> = [];
-  for (let i = 0; i < CAMPAIGNS.length; i++) {
-    for (let j = i + 1; j < CAMPAIGNS.length; j++) {
-      const a = CAMPAIGNS[i];
-      const b = CAMPAIGNS[j];
+  for (let i = 0; i < getStore().length; i++) {
+    for (let j = i + 1; j < getStore().length; j++) {
+      const a = getStore()[i];
+      const b = getStore()[j];
       // Пересечение по времени и регионам
       const timeOverlap = new Date(a.start_date) <= new Date(b.end_date) && new Date(b.start_date) <= new Date(a.end_date);
       const regionOverlap = a.regions.some(r => b.regions.includes(r));
