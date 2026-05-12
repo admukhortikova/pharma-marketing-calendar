@@ -162,6 +162,9 @@ export default function CampaignDetail() {
                 <span>💰 {fmt(camp.budget)}</span>
               </div>
             </div>
+          <button onClick={() => window.open(`/campaigns/${id}/export`, '_blank')} style={{ padding: '8px 16px', background: 'var(--accent-light)', border: '1px solid rgba(99,102,241,0.3)', borderRadius: 8, color: 'var(--accent)', fontSize: 13, fontWeight: 600, cursor: 'pointer', fontFamily: 'Manrope', whiteSpace: 'nowrap' }}>
+              ↓ Экспорт PDF
+            </button>
           </div>
         </div>
 
